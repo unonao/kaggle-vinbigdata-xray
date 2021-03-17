@@ -1,3 +1,13 @@
+input/*
+working/logs/*
+working/output/*
+working/yolov5
+working/chest_yolo/original*
+working/chest_yolo/hist*
+working/chest_yolo/clahe*
+
+.ipynb_checkpoints
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

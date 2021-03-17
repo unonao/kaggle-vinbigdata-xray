@@ -1,0 +1,30 @@
+{
+    "fold_num": 5,
+    "seed": 719,
+    "model": "vit",
+    "model_arch": "vit_base_patch32_384",
+    "dim": 512,
+    "resize_dim": 384,
+    "way": "",
+    "epochs": 20,
+    "train_bs": 32,
+    "valid_bs": 32,
+    "T_0": 10,
+    "lr": 1e-3,
+    "min_lr": 1e-5,
+    "weight_decay": 1e-2,
+    "num_workers": 6,
+    "accum_iter": 20,
+    "verbose_step": 1,
+    "device": "cuda:0",
+    "transform_way": "resize",
+    "tta": 1,
+    "used_epochs": [
+        4,
+        5
+    ],
+    "weights": [
+        1,
+        2
+    ]
+}
