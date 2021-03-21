@@ -34,13 +34,30 @@ logger.addHandler(handler_file)
 
 MAIN_PATH = '../../input/vinbigdata-chest-xray-abnormalities-detection/'
 TRAIN_PATH = f'../../input/vinbigdata-chest-xray-resized-png-{CFG["dim"]}x{CFG["dim"]}{CFG["way"]}/train'
+TRAIN_META = "../../input/dicom-meta/train_meta.csv"
 
-
-def load_train_df(path):
+def load_train_df():
+    path = os.path.join(MAIN_PATH,"train.csv")
     train_df = pd.read_csv(path)
     is_normal_df = train_df.groupby("image_id")["class_id"].agg(lambda s: (s == 14).sum()).reset_index().rename({"class_id": "num_normal_annotations"}, axis=1)
-    is_normal_df["label"] = (is_normal_df["num_normal_annotations"]==3).astype(int) # 3人とも異常なしを1とする
-    return is_normal_df[["image_id", "label"]]
+    is_normal_df["label"] = (is_normal_df["num_normal_annotations"] == 3).astype(int)  # 3人とも異常なしを1とする
+    # meta情報を結合
+    meta = pd.read_csv(TRAIN_META)
+    meta = meta[["FileName", "PixelSpacing0", "PixelSpacing1","PatientSex"]]
+    meta["image_id"] = meta["FileName"].str.replace('.dicom', '')
+    meta = meta.drop(["FileName"], axis=1)
+    is_normal_df = is_normal_df[["image_id", "label"]].merge(meta, how="left", on="image_id")
+    """
+    is_normal_df["ch1"] = is_normal_df["PixelSpacing0"].fillna(1.)
+    is_normal_df["ch2"] = 0
+    """
+    is_normal_df["PatientSex"] = is_normal_df["PatientSex"].fillna("no")
+    is_normal_df["ch1"] = ((is_normal_df["PatientSex"]=="O")|(is_normal_df["PatientSex"]=="no")).astype(int)
+    is_normal_df["ch2"] = 0
+
+    print(is_normal_df)
+    is_normal_df["label"] = is_normal_df["label"].astype(int)
+    return is_normal_df
 
 def main():
     from model.transform import get_train_transforms, get_valid_transforms
@@ -50,7 +67,7 @@ def main():
     from model.utils import seed_everything
 
     logger.debug(CFG)
-    train = load_train_df(os.path.join(MAIN_PATH,"train.csv"))
+    train = load_train_df()
     seed_everything(CFG['seed'])
 
     folds = StratifiedKFold(n_splits=CFG['fold_num'], shuffle=True, random_state=CFG['seed']).split(np.arange(train.shape[0]), train.label.values)
@@ -62,7 +79,7 @@ def main():
         """
         logger.debug(f'Training with fold {fold} started (train:{len(trn_idx)}, val:{len(val_idx)})')
 
-        train_loader, val_loader = prepare_dataloader(train, (CFG["resize_dim"], CFG["resize_dim"]), trn_idx, val_idx, data_root=os.path.join(TRAIN_PATH), train_bs=CFG["train_bs"], valid_bs=CFG["valid_bs"], num_workers=CFG["num_workers"], do_fmix=False, do_cutmix=False, transform_way=CFG["transform_way"])
+        train_loader, val_loader = prepare_dataloader(train, (CFG["resize_dim"], CFG["resize_dim"]), trn_idx, val_idx, data_root=os.path.join(TRAIN_PATH), train_bs=CFG["train_bs"], valid_bs=CFG["valid_bs"], num_workers=CFG["num_workers"], do_fmix=False, do_cutmix=False, transform_way=CFG["transform_way"], use_meta = CFG["meta"])
 
         device = torch.device(CFG['device'])
 

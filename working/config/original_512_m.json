@@ -3,7 +3,7 @@
     "way": "original",
     "fold_num": 5,
     "seed": 11,
-    "bach_size": 32,
+    "bach_size": 4,
     "weights": "yolov5m.pt",
     "hyp_conf": "hyp00",
     "epochs": 40

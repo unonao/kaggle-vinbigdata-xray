@@ -4,7 +4,7 @@
     "fold_num": 5,
     "seed": 11,
     "bach_size": 4,
-    "weights": "yolov5x.pt",
-    "hyp_conf": "hyp02",
+    "weights": "yolov5l.pt",
+    "hyp_conf": "hyp01",
     "epochs": 40
 }

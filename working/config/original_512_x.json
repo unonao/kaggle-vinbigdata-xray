@@ -1,10 +1,10 @@
 {
-    "dim": 1024,
-    "way": "",
+    "dim": 512,
+    "way": "original",
     "fold_num": 5,
     "seed": 11,
     "bach_size": 4,
     "weights": "yolov5x.pt",
-    "hyp_conf": "hyp02",
+    "hyp_conf": "hyp00",
     "epochs": 40
 }

@@ -27,7 +27,8 @@ class XrayDataset(Dataset):
                      'alpha': 1,
                  },
                  image_name_col = "image_id",
-                 label_col = "label"
+                 label_col="label",
+                 use_meta=False
                 ):
 
         super().__init__()
@@ -37,6 +38,7 @@ class XrayDataset(Dataset):
         self.data_root = data_root
         self.do_cutmix = do_cutmix
         self.cutmix_params = cutmix_params
+        self.use_meta = use_meta
 
         self.output_label = output_label
         self.one_hot_label = one_hot_label
@@ -60,7 +62,10 @@ class XrayDataset(Dataset):
         if self.output_label:
             target = self.labels[index]
 
-        img  = get_img(f"{self.data_root}/{self.df.loc[index][self.image_name_col]}.png")
+        if self.use_meta:
+            img  = get_img(f"{self.data_root}/{self.df.loc[index][self.image_name_col]}.png",use_meta=self.use_meta, ch1=self.df.loc[index]["ch1"] , ch2=self.df.loc[index]["ch2"])
+        else:
+            img  = get_img(f"{self.data_root}/{self.df.loc[index][self.image_name_col]}.png", use_meta=self.use_meta)
 
         if self.transforms:
             img = self.transforms(image=img)['image']

@@ -15,14 +15,15 @@ def seed_everything(seed):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = True
 
-def get_img(path):
+def get_img(path, use_meta=False ,ch1=0.0, ch2=0.0):
     """
     pathからimageの配列を得る
     """
-    #im_bgr = cv2.imread(path)
-    #im_rgb = im_bgr[:, :, ::-1]
-    #print(im_rgb)
-    return cv2.imread(path)
+    im_three = cv2.imread(path)
+    if use_meta:
+        im_three[:,:,1] = int(ch1*255.0)
+        im_three[:,:,2] = int(ch2*255.0)
+    return im_three
 
 def rand_bbox(size, lam):
     """

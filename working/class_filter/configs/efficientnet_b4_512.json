@@ -1,6 +1,7 @@
 {
     "fold_num": 5,
     "seed": 719,
+    "meta": 0,
     "model": "efficientnet",
     "model_arch": "tf_efficientnet_b4_ns",
     "dim": 512,
@@ -18,13 +19,15 @@
     "verbose_step": 1,
     "device": "cuda:0",
     "transform_way": "resize",
-    "tta": 1,
+    "tta": 5,
     "used_epochs": [
-        4,
-        5
+        7,
+        8,
+        9
     ],
     "weights": [
         1,
-        2
+        1,
+        0.5
     ]
 }

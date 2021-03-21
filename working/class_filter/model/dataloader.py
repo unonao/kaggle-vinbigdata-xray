@@ -7,7 +7,7 @@ from .transform import get_train_transforms, get_valid_transforms
 from .dataset import XrayDataset
 
 
-def prepare_dataloader(df, input_shape, trn_idx, val_idx, data_root, train_bs, valid_bs, num_workers, do_fmix=False, do_cutmix=False, transform_way = "resize"):
+def prepare_dataloader(df, input_shape, trn_idx, val_idx, data_root, train_bs, valid_bs, num_workers, do_fmix=False, do_cutmix=False, transform_way = "resize", use_meta=False):
     """
     データローダーを作成する関数
     """
@@ -15,8 +15,8 @@ def prepare_dataloader(df, input_shape, trn_idx, val_idx, data_root, train_bs, v
     train_ = df.loc[trn_idx,:].reset_index(drop=True)
     valid_ = df.loc[val_idx,:].reset_index(drop=True)
 
-    train_ds = XrayDataset(train_, data_root ,input_shape, transforms=get_train_transforms(input_shape,transform_way), output_label=True, one_hot_label=False, do_fmix=do_fmix, do_cutmix=do_cutmix)
-    valid_ds = XrayDataset(valid_, data_root ,input_shape, transforms=get_valid_transforms(input_shape,transform_way), output_label=True)
+    train_ds = XrayDataset(train_, data_root ,input_shape, transforms=get_train_transforms(input_shape,transform_way), output_label=True, one_hot_label=False, do_fmix=do_fmix, do_cutmix=do_cutmix, use_meta=use_meta)
+    valid_ds = XrayDataset(valid_, data_root ,input_shape, transforms=get_valid_transforms(input_shape,transform_way), output_label=True, use_meta=use_meta)
 
     train_loader = torch.utils.data.DataLoader(
         train_ds,
