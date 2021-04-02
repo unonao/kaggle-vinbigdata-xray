@@ -2,12 +2,15 @@ input/*
 working/logs/*
 working/class_filter/output/*
 working/class_filter/logs/*
+working/class_filter/save
 working/output/*
 working/yolov5
-working/class_filter/save
 working/chest_yolo/original*
 working/chest_yolo/hist*
 working/chest_yolo/clahe*
+working/wandb
+
+*.pth
 
 .ipynb_checkpoints
 
